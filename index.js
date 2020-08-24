@@ -8,17 +8,24 @@ function detectIsFunction(value) {
 }
 
 function getAllProps(object) {
+  var results = [];
   var obj = object;
   var props = [];
+  var objProps = Object.getOwnPropertyNames(Object.getPrototypeOf({}));
   do {
-      props = props.concat(Object.getOwnPropertyNames(obj));
+    var currType = obj.constructor.name;
+    var newprops = Object.getOwnPropertyNames(obj);
+    var finalProps = newprops.filter((p) => { return objProps.indexOf(p) === -1; });
+    var propsboth = finalProps.map((p) => {
+      return {
+        prop: p,
+        display: currType + '.' + p
+      };
+    });
+    results = results.concat(propsboth);
   } while (obj = Object.getPrototypeOf(obj));
 
-  var objProps = Object.getOwnPropertyNames(Object.getPrototypeOf({}));
-
-  var finalProps = props.filter((p) => { return objProps.indexOf(p) === -1; });
-
-  return finalProps;
+  return results;
 }
 
 function extractPropsAndFuncs(objPtr, keys) {
@@ -27,12 +34,12 @@ function extractPropsAndFuncs(objPtr, keys) {
     funcs: []
   }
   for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
-    var thing = objPtr[key];
+    var propInfo = keys[i];
+    var thing = objPtr[propInfo.prop];
     if (detectIsFunction(thing)) {
-      result.funcs.push(key);
+      result.funcs.push(propInfo);
     } else {
-      result.props.push(key);
+      result.props.push(propInfo);
     }
   }
 
@@ -42,10 +49,18 @@ function extractPropsAndFuncs(objPtr, keys) {
 export class Odox {
   constructor() {
     this.typeName = this.constructor.name;
-    var keys = getAllProps(this);
-    //var keys = Object.keys(this);
-    var privates = keys.filter((k) => { return k.startsWith('_'); });
-    var publics = keys.filter((k) => { return !k.startsWith('_'); });
+    var props = getAllProps(this);
+
+    var privates = props.filter((p) => {
+      return p.prop.startsWith('_');
+    });
+
+    var publics = props.filter((p) => {
+      return !p.prop.startsWith('_');
+    });
+
+    //var privates = keys.filter((k) => { return k.startsWith('_'); });
+    //var publics = keys.filter((k) => { return !k.startsWith('_'); });
 
     this.privates = extractPropsAndFuncs(this, privates);
     this.publics = extractPropsAndFuncs(this, publics);
