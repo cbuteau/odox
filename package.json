@@ -1,0 +1,32 @@
+{
+  "name": "odox",
+  "version": "1.0.0",
+  "description": "An ES6 mini-library that has a base object so you can call doc() and get a console dump of methods.",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma start",
+    "testc": "karma start --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbuteau/odox.git"
+  },
+  "keywords": [
+    "es6",
+    "documentation"
+  ],
+  "author": "Christopher W Buteau <cbuteau@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cbuteau/odox/issues"
+  },
+  "homepage": "https://github.com/cbuteau/odox#readme",
+  "dependencies": {
+    "@open-wc/karma-esm": "3.0.4",
+    "jasmine": "3.6.1",
+    "karma": "5.1.1",
+    "karma-chrome-launcher": "3.1.0",
+    "karma-firefox-launcher": "1.3.0",
+    "karma-jasmine": "4.0.1"
+  }
+}
