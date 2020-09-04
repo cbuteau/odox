@@ -32,7 +32,7 @@ function extractPropsAndFuncs(objPtr, keys) {
   var result = {
     props: [],
     funcs: []
-  }
+  };
   for (var i = 0; i < keys.length; i++) {
     var propInfo = keys[i];
     var thing = objPtr[propInfo.prop];
@@ -44,6 +44,18 @@ function extractPropsAndFuncs(objPtr, keys) {
   }
 
   return result;
+}
+
+function dumpGroup(groupHeader, array) {
+  var len = array.length;
+  if (len) {
+    console.groupCollapsed(groupHeader);
+    for (var i = 0; i < len; i++) {
+      var cur = array[i];
+      console.log(cur.display);
+    }
+    console.groupEnd();
+  }
 }
 
 export class Odox {
@@ -69,14 +81,12 @@ export class Odox {
   doc() {
     console.groupCollapsed(' object ' + this.typeName);
     console.groupCollapsed('privates');
-    for (var i = 0; i < this.privates.funcs.length; i++) {
-      console.log(this.privates.funcs[i]);
-    }
+    dumpGroup('functions', this.privates.funcs);
+    dumpGroup('properties', this.privates.props);
     console.groupEnd();
     console.groupCollapsed('publics');
-    for (var i = 0; i < this.publics.funcs.length; i++) {
-      console.log(this.publics.funcs[i]);
-    }
+    dumpGroup('functions', this.publics.funcs);
+    dumpGroup('properties', this.publics.props);
     console.groupEnd();
     console.groupEnd();
   }
