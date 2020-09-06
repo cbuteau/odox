@@ -37,6 +37,7 @@ function extractPropsAndFuncs(objPtr, keys) {
     var propInfo = keys[i];
     var thing = objPtr[propInfo.prop];
     if (detectIsFunction(thing)) {
+      propInfo.paramCount = thing.length;
       result.funcs.push(propInfo);
     } else {
       result.props.push(propInfo);
